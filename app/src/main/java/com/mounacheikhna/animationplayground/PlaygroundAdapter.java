@@ -4,38 +4,36 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import com.mounacheikhna.animationplayground.AnimationItem.Animations;
 import java.util.Arrays;
 import java.util.List;
 
 public class PlaygroundAdapter extends RecyclerView.Adapter<PlaygroundAdapter.PlaygroundViewHolder> {
 
-  private final Item[] ITEMS = new Item[] {
-      new Item("Shared elements transitions", Animations.SHARED_ELEMENT_TRANSITION)
+  private final AnimationItem[] ITEMS = new AnimationItem[] {
+      new AnimationItem("Shared elements transitions", Animations.SHARED_ELEMENT_TRANSITION)
   };
 
-  private List<Item> items;
+  private List<AnimationItem> items;
 
   public PlaygroundAdapter() {
     this.items = Arrays.asList(ITEMS);
   }
 
   @Override public PlaygroundViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return LayoutInflater.from(parent.getContext())
+    final AnimationItemView view = (AnimationItemView) LayoutInflater.from(parent.getContext())
         .inflate(R.layout.playground_item, parent, false);
+    return new PlaygroundViewHolder(view);
   }
 
   @Override public void onBindViewHolder(final PlaygroundViewHolder holder, int position) {
-    final Item item = items.get(position);
-    holder.text.setText(item.title);
+    final AnimationItem item = items.get(position);
+    holder.itemView.bindTo(item);
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         switch (item.type) {
           case SHARED_ELEMENT_TRANSITION:
             //startActivity()
-
         }
       }
     });
@@ -46,26 +44,11 @@ public class PlaygroundAdapter extends RecyclerView.Adapter<PlaygroundAdapter.Pl
   }
 
   public static class PlaygroundViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.txt) TextView text;
+    AnimationItemView itemView;
 
-    public PlaygroundViewHolder(View itemView) {
+    public PlaygroundViewHolder(AnimationItemView itemView) {
       super(itemView);
-      ButterKnife.bind(this, itemView);
-    }
-  }
-
-  enum Animations {
-    SHARED_ELEMENT_TRANSITION
-  }
-
-
-  public class Item {
-    String title;
-    Animations type;
-
-    public Item(String title, Animations type) {
-      this.title = title;
-      this.type = type;
+      this.itemView = itemView;
     }
   }
 
